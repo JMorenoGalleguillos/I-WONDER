@@ -1,50 +1,134 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>¿Quieres pololear conmigo?</title>
+  <title>Trivia Romántica</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      background: #fff0f5;
       margin: 0;
       padding: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #ffe6eb, #ffffff);
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
       text-align: center;
     }
-    .message {
-      background-color: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-      max-width: 90%;
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      max-width: 600px;
     }
-    .message h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-      color: #d0005f;
+    h2 { color: #d0005f; }
+    button {
+      background-color: #ff66a3;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
     }
-    .message p {
-      font-size: 1.5em;
-      margin-bottom: 30px;
+    button:hover {
+      background-color: #cc4078;
     }
-    audio {
-      margin-top: 20px;
+    .hidden { display: none; }
+    .hearts {
+      font-size: 40px;
+      animation: float 1s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="message">
-    <h1>¿Quieres pololear conmigo? 💖</h1>
-    <p>Sí = un beso 😘</p>
-    <audio controls autoplay>
-      <source src="iwonder.mp3" type="audio/mpeg">
-      Tu navegador no soporta audio HTML5.
-    </audio>
+  <div class="container" id="quiz-container">
+    <h2 id="question"></h2>
+    <div id="answers"></div>
   </div>
+
+  <script>
+    const questions = [
+      {
+        q: "¿Cuántos pokémons son de la primera generación?",
+        options: ["101", "152", "151", "11"],
+        answer: 2
+      },
+      {
+        q: "¿Quién es Haku en la película 'El viaje de Chihiro'?",
+        options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"],
+        answer: 0
+      },
+      {
+        q: "¿Quién es el amor verdadero de Uzumaki Naruto?",
+        options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"],
+        answer: 1
+      },
+      {
+        q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?",
+        options: ["Negros", "Azules", "Verdes", "Violetas"],
+        answer: 1
+      },
+      {
+        q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?",
+        options: ["5", "7", "8", "9"],
+        answer: 3
+      },
+      {
+        q: "¿Cuál es el apellido de Sakura de 'Cardcaptor'?",
+        options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"],
+        answer: 3
+      },
+      {
+        q: "¿Quieres pololear conmigo? 💖",
+        options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"],
+        answer: 3
+      }
+    ];
+
+    let current = 0;
+
+    function loadQuestion() {
+      const q = questions[current];
+      document.getElementById('question').textContent = q.q;
+      const answersDiv = document.getElementById('answers');
+      answersDiv.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (idx === q.answer) {
+            current++;
+            if (current < questions.length) {
+              loadQuestion();
+            } else {
+              showFinal();
+            }
+          } else {
+            alert("¡Oops! Esa no es la respuesta correcta 💔");
+          }
+        };
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function showFinal() {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = `
+        <h2>💖 ¡Siii! 💖</h2>
+        <div class="hearts">💗💓💞💕💘💝💖💗💓💞💕💘💝💖</div>
+      `;
+    }
+
+    loadQuestion();
+  </script>
 </body>
 </html>
