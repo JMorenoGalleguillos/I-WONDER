@@ -32,17 +32,9 @@
       font-size: 1.5em;
       margin-bottom: 30px;
     }
-    .message button {
-      background-color: #d0005f;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1em;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    .message button:hover {
-      background-color: #a8004b;
+    iframe {
+      margin-top: 20px;
+      border-radius: 12px;
     }
   </style>
 </head>
@@ -50,15 +42,10 @@
   <div class="message">
     <h1>¿Quieres pololear conmigo? 💖</h1>
     <p>Sí = un beso 😘</p>
-    <button onclick="document.getElementById('player').style.display='block'; this.style.display='none';">
-      💕 Haz clic aquí para escuchar nuestra canción
-    </button>
-    <div id="player" style="display:none; margin-top: 20px;">
-      <iframe width="300" height="169" src="https://www.youtube.com/embed/SeZouxOauPw?autoplay=1" 
-        title="YouTube video player" frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        allowfullscreen></iframe>
-    </div>
+    <iframe src="https://open.spotify.com/embed/track/6tMfzz0gWGC7jCgGiMpjLM?utm_source=generator"
+      width="300" height="80" frameBorder="0" allowfullscreen=""
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+    </iframe>
   </div>
 </body>
 </html>
