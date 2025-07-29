@@ -14,6 +14,8 @@
       align-items: center;
       height: 100vh;
       text-align: center;
+      background-size: cover;
+      background-position: center;
     }
     .container {
       background: white;
@@ -53,36 +55,37 @@
     <h2 id="question"></h2>
     <div id="answers"></div>
   </div>
+  <audio id="bg-music" src="iwonder.mp3"></audio>
 
   <script>
     const questions = [
       {
-        q: "¿Cuántos pokémons son de la primera generación?",
+        q: "Pregunta 1",
         options: ["101", "152", "151", "11"],
         answer: 2
       },
       {
-        q: "¿Quién es Haku en la película 'El viaje de Chihiro'?",
+        q: "Pregunta 2",
         options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"],
         answer: 0
       },
       {
-        q: "¿Quién es el amor verdadero de Uzumaki Naruto?",
+        q: "Pregunta 3",
         options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"],
         answer: 1
       },
       {
-        q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?",
+        q: "Pregunta 4",
         options: ["Negros", "Azules", "Verdes", "Violetas"],
         answer: 1
       },
       {
-        q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?",
+        q: "Pregunta 5",
         options: ["5", "7", "8", "9"],
         answer: 3
       },
       {
-        q: "¿Cuál es el apellido de Sakura de 'Cardcaptor'?",
+        q: "Pregunta 6",
         options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"],
         answer: 3
       },
@@ -101,11 +104,17 @@
       const answersDiv = document.getElementById('answers');
       answersDiv.innerHTML = "";
 
+      // Asignar fondo según pregunta
+      document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
+
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.textContent = opt;
         btn.onclick = () => {
           if (idx === q.answer) {
+            if (current === 5) {
+              document.getElementById("bg-music").play();
+            }
             current++;
             if (current < questions.length) {
               loadQuestion();
