@@ -24,18 +24,20 @@
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       max-width: 600px;
-      /* Subir contenedor aún más arriba */
       transform: translateY(-70%);
     }
     h2 { color: #d0005f; margin-bottom: 20px; }
+    #answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
     button {
-      display: block;
       width: 100%;
       background-color: #ff66a3;
       border: none;
       color: white;
       padding: 12px;
-      margin: 8px 0;
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
@@ -56,11 +58,12 @@
   </style>
 </head>
 <body>
+  <!-- Audio dinámico para naruto.mp3 hasta pregunta 5, y iwonder.mp3 desde la 6 -->
+  <audio id="bg-music" autoplay loop></audio>
   <div class="container" id="quiz-container">
     <h2 id="question"></h2>
     <div id="answers"></div>
   </div>
-  <audio id="bg-music" src="iwonder.mp3"></audio>
 
   <script>
     const letters = ['a)', 'b)', 'c)', 'd)'];
@@ -74,13 +77,24 @@
       { q: "¿Quieres pololear conmigo? 💖", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
     ];
 
+    const audio = document.getElementById('bg-music');
     let current = 0;
 
+    function updateAudio() {
+      // Hasta antes de pregunta 6 (índice < 5) suena naruto.mp3, luego iwonder.mp3
+      const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
+      if (!audio.src.includes(src)) {
+        audio.src = src;
+        audio.play();
+      }
+    }
+
     function loadQuestion() {
+      updateAudio();
       const q = questions[current];
       document.getElementById('question').textContent = q.q;
       const answersDiv = document.getElementById('answers');
-      answersDiv.innerHTML = "";
+      answersDiv.innerHTML = '';
 
       document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
 
@@ -89,7 +103,6 @@
         btn.textContent = `${letters[idx]} ${opt}`;
         btn.onclick = () => {
           if (idx === q.answer) {
-            if (current === 5) document.getElementById('bg-music').play();
             current++;
             if (current < questions.length) loadQuestion(); else showFinal();
           } else {
@@ -106,6 +119,7 @@
         <h2>💖 ¡Siii! 💖</h2>
         <div class="hearts">💗💓💞💕💘💝💖💗💓💞💕💘💝💖</div>
       `;
+      updateAudio(); // Asegura que suene iwonder al final
     }
 
     loadQuestion();
