@@ -24,24 +24,26 @@
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       max-width: 600px;
-      /* Subir contenedor un 50% más arriba */
-      transform: translateY(-50%);
+      /* Subir contenedor aún más arriba */
+      transform: translateY(-70%);
     }
-    h2 { color: #d0005f; }
+    h2 { color: #d0005f; margin-bottom: 20px; }
     button {
+      display: block;
+      width: 100%;
       background-color: #ff66a3;
       border: none;
       color: white;
-      padding: 10px 20px;
-      margin: 10px;
+      padding: 12px;
+      margin: 8px 0;
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
+      text-align: left;
     }
     button:hover {
       background-color: #cc4078;
     }
-    .hidden { display: none; }
     .hearts {
       font-size: 40px;
       animation: float 1s ease-in-out infinite;
@@ -61,42 +63,15 @@
   <audio id="bg-music" src="iwonder.mp3"></audio>
 
   <script>
+    const letters = ['a)', 'b)', 'c)', 'd)'];
     const questions = [
-      {
-        q: "¿Cuántos pokémons son de la primera generación?",
-        options: ["101", "152", "151", "11"],
-        answer: 2
-      },
-      {
-        q: "¿Quién es Haku en la película 'El viaje de Chihiro'?",
-        options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"],
-        answer: 0
-      },
-      {
-        q: "¿Quién es el amor verdadero de Uzumaki Naruto?",
-        options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"],
-        answer: 1
-      },
-      {
-        q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?",
-        options: ["Negros", "Azules", "Verdes", "Violetas"],
-        answer: 1
-      },
-      {
-        q: "En 'Kimetsu No Yaiba', ¿cuántos pilares existen?",
-        options: ["5", "7", "8", "9"],
-        answer: 3
-      },
-      {
-        q: "¿Cuál es el apellido de Sakura Cardcaptor?",
-        options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"],
-        answer: 3
-      },
-      {
-        q: "¿Quieres pololear conmigo? 💖",
-        options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"],
-        answer: 3
-      }
+      { q: "¿Cuántos pokémons son de la primera generación?", options: ["101", "152", "151", "11"], answer: 2 },
+      { q: "¿Quién es Haku en la película 'El viaje de Chihiro'?", options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"], answer: 0 },
+      { q: "¿Quién es el amor verdadero de Uzumaki Naruto?", options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"], answer: 1 },
+      { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
+      { q: "En 'Kimetsu No Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
+      { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
+      { q: "¿Quieres pololear conmigo? 💖", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
     ];
 
     let current = 0;
@@ -107,25 +82,18 @@
       const answersDiv = document.getElementById('answers');
       answersDiv.innerHTML = "";
 
-      // Asignar fondo según pregunta
-      document.body.style.backgroundImage = `url('fondo${current + 1}.png.png')`;
+      document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
 
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.textContent = opt;
+        btn.textContent = `${letters[idx]} ${opt}`;
         btn.onclick = () => {
           if (idx === q.answer) {
-            if (current === 5) {
-              document.getElementById("bg-music").play();
-            }
+            if (current === 5) document.getElementById('bg-music').play();
             current++;
-            if (current < questions.length) {
-              loadQuestion();
-            } else {
-              showFinal();
-            }
+            if (current < questions.length) loadQuestion(); else showFinal();
           } else {
-            alert("¡Oops! Esa no es la respuesta correcta 💔");
+            alert('¡Oops! Esa no es la respuesta correcta 💔');
           }
         };
         answersDiv.appendChild(btn);
