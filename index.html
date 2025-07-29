@@ -6,17 +6,16 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #fff0f5;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
       text-align: center;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .container {
       background: white;
@@ -25,6 +24,7 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       max-width: 600px;
       transform: translateY(-70%);
+      z-index: 1;
     }
     h2 { color: #d0005f; margin-bottom: 20px; }
     #answers {
@@ -32,7 +32,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 15px;
     }
-    button {
+    button.answer {
       width: 100%;
       background-color: #ff66a3;
       border: none;
@@ -43,7 +43,7 @@
       cursor: pointer;
       text-align: left;
     }
-    button:hover {
+    button.answer:hover {
       background-color: #cc4078;
     }
     .hearts {
@@ -58,8 +58,8 @@
   </style>
 </head>
 <body>
-  <!-- Audio dinámico para naruto.mp3 hasta pregunta 5, y iwonder.mp3 desde la 6 -->
-  <audio id="bg-music" autoplay loop></audio>
+  <!-- Autoplay de naruto.mp3 inicialmente, loop -->
+  <audio id="bg-music" src="naruto.mp3" autoplay loop></audio>
   <div class="container" id="quiz-container">
     <h2 id="question"></h2>
     <div id="answers"></div>
@@ -76,20 +76,15 @@
       { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
       { q: "¿Quieres pololear conmigo? 💖", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
     ];
-
     const audio = document.getElementById('bg-music');
     let current = 0;
 
     function updateAudio() {
-      // Hasta antes de pregunta 6 (índice < 5) suena naruto.mp3, luego iwonder.mp3
       const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
       if (!audio.src.includes(src)) {
         audio.src = src;
-        audio.loop = true;
-        audio.load();
         audio.play().catch(() => {
-          // Autoplay puede requerir interacción del usuario
-          console.log('Reproducción automática bloqueada.');
+          console.log('Autoplay bloqueado.');
         });
       }
     }
@@ -100,11 +95,10 @@
       document.getElementById('question').textContent = q.q;
       const answersDiv = document.getElementById('answers');
       answersDiv.innerHTML = '';
-
       document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
-
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
+        btn.className = 'answer';
         btn.textContent = `${letters[idx]} ${opt}`;
         btn.onclick = () => {
           if (idx === q.answer) {
@@ -119,12 +113,12 @@
     }
 
     function showFinal() {
+      updateAudio();
       const container = document.getElementById('quiz-container');
       container.innerHTML = `
         <h2>💖 ¡Siii! 💖</h2>
         <div class="hearts">💗💓💞💕💘💝💖💗💓💞💕💘💝💖</div>
       `;
-      updateAudio(); // Asegura que suene iwonder al final
     }
 
     document.addEventListener('DOMContentLoaded', loadQuestion);
