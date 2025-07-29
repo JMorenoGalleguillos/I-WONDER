@@ -85,7 +85,12 @@
       const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
       if (!audio.src.includes(src)) {
         audio.src = src;
-        audio.play();
+        audio.loop = true;
+        audio.load();
+        audio.play().catch(() => {
+          // Autoplay puede requerir interacción del usuario
+          console.log('Reproducción automática bloqueada.');
+        });
       }
     }
 
@@ -122,7 +127,7 @@
       updateAudio(); // Asegura que suene iwonder al final
     }
 
-    loadQuestion();
+    document.addEventListener('DOMContentLoaded', loadQuestion);
   </script>
 </body>
 </html>
