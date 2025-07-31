@@ -17,7 +17,7 @@
       justify-content: center;
       align-items: center;
     }
-    /* Pantalla inicial con fondo */
+    /* Pantalla inicial */
     #start-screen {
       position: absolute;
       top: 0; left: 0;
@@ -66,12 +66,12 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       max-width: 600px;
       transform: translateY(-20%);
-      z-index: 1;
       text-align: center;
+      z-index: 1;
     }
     #pre-final button {
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 16px;
       background-color: #ff66a3;
       color: white;
@@ -91,8 +91,8 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       max-width: 600px;
       transform: translateY(-20%);
-      z-index: 1;
       text-align: center;
+      z-index: 1;
     }
     h2 { color: #d0005f; margin-bottom: 10px; }
     #feedback {
@@ -134,20 +134,17 @@
 <body>
   <audio id="bg-music" loop></audio>
 
-  <!-- Pantalla inicial -->
   <div id="start-screen">
     <h2>Bienvenido a la ANITRIVIA</h2>
     <input type="text" id="username" placeholder="Ingresa tu nombre" />
     <button id="start-btn">Iniciar Trivia</button>
   </div>
 
-  <!-- Pantalla previa a la última pregunta -->
   <div id="pre-final">
     <h2 id="pre-text"></h2>
     <button id="pre-btn">Continuar</button>
   </div>
 
-  <!-- Contenedor de la trivia -->
   <div class="container" id="quiz-container">
     <h2 id="question"></h2>
     <div id="feedback"></div>
@@ -155,108 +152,107 @@
   </div>
 
   <script>
-    const letters = ['a)', 'b)', 'c)', 'd)'];
-    const messages = [
-      '¡Bien hecho, {name}! 🎉',
-      '¡Excelente, {name}! ✨',
-      '¡Sigue así, {name}! 👍',
-      '¡Muy bien, {name}! 😊'
-    ];
-    const questions = [
-      { q: "¿Cuántos pokémons son de la primera generación?", options: ["101", "152", "151", "11"], answer: 2 },
-      { q: "¿Quién es Haku en la película 'El viaje de Chihiro'?", options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"], answer: 0 },
-      { q: "¿Quién es el amor verdadero de Uzumaki Naruto?", options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"], answer: 1 },
-      { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
-      { q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
-      { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
-      { q: "¿Quieres pololear conmigo? 💙", options: ["Sí", "Muy Sí", "YES or YES", "Todas las anteriores"], answer: 3 }
-    ];
+    document.addEventListener('DOMContentLoaded', function() {
+      const letters = ['a)', 'b)', 'c)', 'd)'];
+      const messages = [
+        '¡Bien hecho, {name}! 🎉',
+        '¡Excelente, {name}! ✨',
+        '¡Sigue así, {name}! 👍',
+        '¡Muy bien, {name}! 😊'
+      ];
+      const questions = [
+        { q: "¿Cuántos pokémons son de la primera generación?", options: ["101", "152", "151", "11"], answer: 2 },
+        { q: "¿Quién es Haku en la película 'El viaje de Chihiro'?", options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"], answer: 0 },
+        { q: "¿Quién es el amor verdadero de Uzumaki Naruto?", options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"], answer: 1 },
+        { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
+        { q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
+        { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
+        { q: "¿Quieres pololear conmigo?", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
+      ];
+      const audio = document.getElementById('bg-music');
+      const startScreen = document.getElementById('start-screen');
+      const startBtn = document.getElementById('start-btn');
+      const usernameInput = document.getElementById('username');
+      const quizContainer = document.getElementById('quiz-container');
+      const preFinal = document.getElementById('pre-final');
+      const preText = document.getElementById('pre-text');
+      const preBtn = document.getElementById('pre-btn');
+      const feedbackEl = document.getElementById('feedback');
+      let current = 0;
+      let username = '';
 
-    const audio = document.getElementById('bg-music');
-    const startScreen = document.getElementById('start-screen');
-    const startBtn = document.getElementById('start-btn');
-    const usernameInput = document.getElementById('username');
-    const preFinal = document.getElementById('pre-final');
-    const preText = document.getElementById('pre-text');
-    const preBtn = document.getElementById('pre-btn');
-    const quizContainer = document.getElementById('quiz-container');
-    const feedbackEl = document.getElementById('feedback');
-    let current = 0;
-    let username = '';
-
-    startBtn.onclick = () => {
-      const name = usernameInput.value.trim();
-      if (!name) return alert('Por favor ingresa tu nombre');
-      username = name;
-      audio.src = 'naruto.mp3';
-      audio.play().catch(() => {});
-      startScreen.style.display = 'none';
-      quizContainer.style.display = 'block';
-      loadQuestion();
-    };
-
-    function updateAudio() {
-      const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
-      if (!audio.src.includes(src)) {
-        audio.src = src;
+      startBtn.addEventListener('click', function() {
+        const name = usernameInput.value.trim();
+        if (!name) { alert('Por favor ingresa tu nombre'); return; }
+        username = name;
+        audio.src = 'naruto.mp3';
         audio.play().catch(() => {});
-      }
-    }
-
-    function loadQuestion() {
-      updateAudio();
-      const q = questions[current];
-      document.getElementById('question').textContent = q.q;
-      const answersDiv = document.getElementById('answers');
-      answersDiv.innerHTML = '';
-      document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
-      feedbackEl.textContent = '';
-      q.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'answer';
-        btn.textContent = `${letters[idx]} ${opt}`;
-        btn.onclick = () => {
-          if (idx === q.answer) {
-            const msg = messages[current % messages.length].replace('{name}', username);
-            feedbackEl.textContent = msg;
-            if (current === 5) {
-            // Cambiar a canción "i wonder" tras penúltima respuesta correcta
-            setTimeout(() => {
-              audio.src = 'iwonder.mp3';
-              audio.play().catch(() => {});
-              quizContainer.style.display = 'none';
-              preText.textContent = `Ahora viene la última y más importante pregunta, ${username}-CHAN. ¡Te enviamos todo el KI, CHAKRA, NEN, HAKI, COSMO, MANA, STANDS, AURA y sobretodo AMOR del mundo 🙌, GANBATTE!! !!`;
-              preFinal.style.display = 'block';
-            }, 1000);
-          }
-            } else {
-              current++;
-              setTimeout(() => {
-                if (current < questions.length) loadQuestion(); else showFinal();
-              }, 1000);
-            }
-          } else {
-            alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
-          }
-        };
-        answersDiv.appendChild(btn);
+        startScreen.style.display = 'none';
+        quizContainer.style.display = 'block';
+        loadQuestion();
       });
-    }
 
-    preBtn.onclick = () => {
-      preFinal.style.display = 'none';
-      current++;
-      quizContainer.style.display = 'block';
-      loadQuestion();
-    };
+      preBtn.addEventListener('click', function() {
+        preFinal.style.display = 'none';
+        quizContainer.style.display = 'block';
+        current++;
+        loadQuestion();
+      });
 
-    function showFinal() {
-      updateAudio();
-      quizContainer.innerHTML = `
-        <h2>💖 ¡Siii! 💖</h2>
-        <div class="hearts">💗💓💞💕💘💝💖</div>
-      `;
-    }
+      function updateAudio() {
+        const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
+        if (!audio.src.includes(src)) {
+          audio.src = src;
+          audio.play().catch(() => {});
+        }
+      }
+
+      function loadQuestion() {
+        updateAudio();
+        const q = questions[current];
+        document.getElementById('question').textContent = q.q;
+        const answersDiv = document.getElementById('answers');
+        answersDiv.innerHTML = '';
+        document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
+        feedbackEl.textContent = '';
+        q.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'answer';
+          btn.textContent = `${letters[idx]} ${opt}`;
+          btn.addEventListener('click', function() {
+            if (idx === q.answer) {
+              const msg = messages[current % messages.length].replace('{name}', username);
+              feedbackEl.textContent = msg;
+              if (current === 5) {
+                setTimeout(function() {
+                  audio.src = 'iwonder.mp3';
+                  audio.play().catch(() => {});
+                  quizContainer.style.display = 'none';
+                  preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI, CHAKRA, NEN, HAKI, COSMO, MANA, STANDS, AURA del mundo 🙌!!`;
+                  preFinal.style.display = 'block';
+                }, 1000);
+              } else {
+                current++;
+                setTimeout(function() {
+                  if (current < questions.length) loadQuestion(); else showFinal();
+                }, 1000);
+              }
+            } else {
+              alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
+            }
+          });
+          answersDiv.appendChild(btn);
+        });
+      }
+
+      function showFinal() {
+        updateAudio();
+        quizContainer.innerHTML = `
+          <h2>💖 ¡Siii! 💖</h2>
+          <div class="hearts">💗💓💞💕💘💝💖</div>
+        `;
+      }
+    });
   </script>
 </body>
 </html>
