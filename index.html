@@ -4,28 +4,30 @@
   <meta charset="UTF-8">
   <title>Trivia Romántica</title>
   <style>
-    body { font-family: Arial, sans-serif; margin:0; padding:0; height:100vh; text-align:center; background-size:cover; background-position:center; background-repeat:no-repeat; display:flex; justify-content:center; align-items:center; color:#fff; }
+    /* Tamaño de texto global aumentado */
+    body { font-family: Arial, sans-serif; font-size: 18px; margin:0; padding:0; height:100vh; text-align:center; background-size:cover; background-position:center; background-repeat:no-repeat; display:flex; justify-content:center; align-items:center; color:#fff; }
     /* Pantallas */
     #start-screen, #pre-final, #quiz-container { position:absolute; top:0; left:0; width:100%; height:100%; background-size:cover; background-position:center; display:flex; flex-direction:column; justify-content:center; align-items:center; }
     /* Fondo transparente */
     #pre-final, #quiz-container { background:none; visibility:hidden; }
     /* Inicio */
     #start-screen { background-image:url('inicio.png'); }
-    #start-screen h2 { margin-top:100px; color:#fff; margin-bottom:20px; font-size:2em; text-shadow:2px 2px 4px rgba(0,0,0,0.7); }
-    #start-screen input { padding:10px; font-size:16px; width:200px; margin-bottom:20px; border:1px solid #ccc; border-radius:5px; color:#333; }
-    #start-screen button { padding:12px 24px; font-size:16px; background-color:rgba(255,102,163,0.8); color:#fff; border:none; border-radius:8px; cursor:pointer; text-shadow:1px 1px 2px rgba(0,0,0,0.7); }
+    #start-screen h2 { margin-top:100px; color:#fff; margin-bottom:20px; font-size:2.5em; text-shadow:2px 2px 4px rgba(0,0,0,0.7); }
+    #start-screen input { padding:12px; font-size:18px; width:240px; margin-bottom:20px; border:1px solid #ccc; border-radius:5px; color:#333; }
+    #start-screen button { padding:14px 28px; font-size:18px; background-color:rgba(255,102,163,0.8); color:#fff; border:none; border-radius:8px; cursor:pointer; text-shadow:1px 1px 2px rgba(0,0,0,0.7); }
     #start-screen button:hover { background-color:rgba(204,64,120,0.8); }
     /* Pre-final */
-    #pre-final h2 { font-size:1.2em; color:#fff; margin:0 20px; text-shadow:2px 2px 4px rgba(0,0,0,0.7); }
-    #pre-final button { margin-top:20px; padding:12px 24px; font-size:16px; background-color:rgba(255,102,163,0.8); color:#fff; border:none; border-radius:8px; cursor:pointer; text-shadow:1px 1px 2px rgba(0,0,0,0.7); }
+    #pre-final h2 { font-size:1.5em; color:#fff; margin:0 20px; text-shadow:2px 2px 4px rgba(0,0,0,0.7); }
+    #pre-final button { margin-top:20px; padding:14px 28px; font-size:18px; background-color:rgba(255,102,163,0.8); color:#fff; border:none; border-radius:8px; cursor:pointer; text-shadow:1px 1px 2px rgba(0,0,0,0.7); }
     #pre-final button:hover { background-color:rgba(204,64,120,0.8); }
     /* Trivia */
-    #quiz-container h2 { color:#fff; margin-bottom:10px; text-shadow:2px 2px 4px rgba(0,0,0,0.7); }
-    #feedback { font-size:1em; color:#fff; margin-bottom:15px; min-height:1.2em; text-shadow:1px 1px 2px rgba(0,0,0,0.7); }
-    #answers { display:grid; grid-template-columns:1fr 1fr; gap:15px; width:80%; }
-    button.answer { width:100%; background-color:rgba(255,102,163,0.8); border:none; color:#fff; padding:12px; font-size:16px; border-radius:8px; cursor:pointer; text-align:left; text-shadow:1px 1px 2px rgba(0,0,0,0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    #quiz-container h2 { color:#fff; margin-bottom:10px; font-size:2em; text-shadow:2px 2px 4px rgba(0,0,0,0.7); }
+    /* Mensaje de ánimo con sombreado y fondo semitransparente */
+    #feedback { font-size:1.3em; color:#fff; margin-bottom:20px; min-height:1.4em; text-shadow:1px 1px 2px rgba(0,0,0,0.7); background:rgba(0,0,0,0.5); padding:10px 20px; border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    #answers { display:grid; grid-template-columns:1fr 1fr; gap:20px; width:80%; }
+    button.answer { width:100%; background-color:rgba(255,102,163,0.8); border:none; color:#fff; padding:14px; font-size:18px; border-radius:8px; cursor:pointer; text-align:left; text-shadow:1px 1px 2px rgba(0,0,0,0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
     button.answer:hover { background-color:rgba(204,64,120,0.8); }
-    .hearts { font-size:40px; animation:float 1s ease-in-out infinite; text-shadow:1px 1px 2px rgba(0,0,0,0.7); }
+    .hearts { font-size:50px; animation:float 1s ease-in-out infinite; text-shadow:1px 1px 2px rgba(0,0,0,0.7); }
     @keyframes float { 0%{transform:translateY(0);}50%{transform:translateY(-10px);}100%{transform:translateY(0);} }
   </style>
 </head>
@@ -86,7 +88,7 @@
             if(idx===q.answer){ feedbackEl.textContent=messages[current%messages.length].replace('{name}',username);
               if(current===5){ setTimeout(()=>{ audio.src='iwonder.mp3'; audio.play().catch(()=>{});
                 document.getElementById('pre-text').textContent=
-                  `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌!!`;
+                  `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌, GANBATTE!!`;
                 quizContainer.style.visibility='hidden'; preFinal.style.visibility='visible'; },1000);
               } else { current++; setTimeout(()=>{ current<questions.length? loadQuestion(): showFinal(); },1000); }
             } else alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
