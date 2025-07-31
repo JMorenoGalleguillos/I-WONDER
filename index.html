@@ -31,7 +31,7 @@
       align-items: center;
       z-index: 10;
     }
-    #start-screen h2 {  
+    #start-screen h2 {
       margin-top: 100px;
       color: #333;
       margin-bottom: 20px;
@@ -154,10 +154,8 @@
       const name = usernameInput.value.trim();
       if (!name) return alert('Por favor ingresa tu nombre');
       username = name;
-      // Iniciar música de Naruto al click
       audio.src = 'naruto.mp3';
-      audio.play().catch(() => console.log('Autoplay bloqueado.'));
-      // Mostrar trivia
+      audio.play().catch(() => {});
       startScreen.style.display = 'none';
       quizContainer.style.visibility = 'visible';
       loadQuestion();
@@ -167,44 +165,34 @@
       const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
       if (!audio.src.includes(src)) {
         audio.src = src;
-        audio.play().catch(() => console.log('Autoplay bloqueado.'));
+        audio.play().catch(() => {});
       }
-    }
-
-    function showFeedback() {
-      const msg = messages[current % messages.length].replace('{name}', username);
-      feedbackEl.textContent = msg;
     }
 
     function loadQuestion() {
       updateAudio();
-      showFeedback();
       const q = questions[current];
       document.getElementById('question').textContent = q.q;
       const answersDiv = document.getElementById('answers');
       answersDiv.innerHTML = '';
       document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
+      feedbackEl.textContent = ''; // limpiar feedback antes de mostrar opciones
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = 'answer';
         btn.textContent = `${letters[idx]} ${opt}`;
         btn.onclick = () => {
           if (idx === q.answer) {
+            // Mostrar feedback tras respuesta correcta
+            const msg = messages[current % messages.length].replace('{name}', username);
+            feedbackEl.textContent = msg;
             current++;
-            if (current < questions.length) loadQuestion(); else showFinal();
-          } else alert('¡Oops! Esa no es la respuesta correcta 💔');
+            if (current < questions.length) {
+              setTimeout(loadQuestion, 1000);
+            } else {
+              setTimeout(showFinal, 1000);
+            }
+          } else {
+            alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
+          }
         };
-        answersDiv.appendChild(btn);
-      });
-    }
-
-    function showFinal() {
-      updateAudio();
-      quizContainer.innerHTML = `
-        <h2>💖 ¡Siii! 💖</h2>
-        <div class="hearts">💗💓💞💕💘💝💖</div>
-      `;
-    }
-  </script>
-</body>
-</html>
