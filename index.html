@@ -31,7 +31,8 @@
       align-items: center;
       z-index: 10;
     }
-    #start-screen h2 {
+    #start-screen h2 {  
+      margin-top: 100px;
       color: #333;
       margin-bottom: 20px;
       font-size: 2em;
@@ -67,7 +68,13 @@
       z-index: 1;
       visibility: hidden;
     }
-    h2 { color: #d0005f; margin-bottom: 20px; }
+    h2 { color: #d0005f; margin-bottom: 10px; }
+    #feedback {
+      font-size: 1em;
+      color: #333;
+      margin-bottom: 15px;
+      min-height: 1.2em;
+    }
     #answers {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -99,8 +106,8 @@
   </style>
 </head>
 <body>
-  <!-- Audio dinámico sin autoplay -->
-  <audio id="bg-music" loop></audio>
+  <!-- Audio dinámica -->
+  <audio id="bg-music" src="naruto.mp3" loop></audio>
 
   <!-- Pantalla inicial -->
   <div id="start-screen">
@@ -112,11 +119,18 @@
   <!-- Contenedor de la trivia -->
   <div class="container" id="quiz-container">
     <h2 id="question"></h2>
+    <div id="feedback"></div>
     <div id="answers"></div>
   </div>
 
   <script>
     const letters = ['a)', 'b)', 'c)', 'd)'];
+    const messages = [
+      '¡Bien hecho, {name}! 🎉',
+      '¡Excelente, {name}! ✨',
+      '¡Sigue así, {name}! 👍',
+      '¡Muy bien, {name}! 😊'
+    ];
     const questions = [
       { q: "¿Cuántos pokémons son de la primera generación?", options: ["101", "152", "151", "11"], answer: 2 },
       { q: "¿Quién es Haku en la película 'El viaje de Chihiro'?", options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"], answer: 0 },
@@ -132,11 +146,14 @@
     const startBtn = document.getElementById('start-btn');
     const usernameInput = document.getElementById('username');
     const quizContainer = document.getElementById('quiz-container');
+    const feedbackEl = document.getElementById('feedback');
     let current = 0;
+    let username = '';
 
     startBtn.onclick = () => {
       const name = usernameInput.value.trim();
       if (!name) return alert('Por favor ingresa tu nombre');
+      username = name;
       // Iniciar música de Naruto al click
       audio.src = 'naruto.mp3';
       audio.play().catch(() => console.log('Autoplay bloqueado.'));
@@ -154,8 +171,14 @@
       }
     }
 
+    function showFeedback() {
+      const msg = messages[current % messages.length].replace('{name}', username);
+      feedbackEl.textContent = msg;
+    }
+
     function loadQuestion() {
       updateAudio();
+      showFeedback();
       const q = questions[current];
       document.getElementById('question').textContent = q.q;
       const answersDiv = document.getElementById('answers');
