@@ -23,7 +23,18 @@
     /* Trivia */
     #quiz-container h2 { color:#fff; margin-bottom:10px; font-size:2em; text-shadow:2px 2px 4px rgba(0,0,0,0.7); }
     /* Mensaje de ánimo con sombreado y fondo semitransparente */
-    #feedback { font-size:1.3em; color:#fff; margin-bottom:20px; min-height:1.4em; text-shadow:1px 1px 2px rgba(0,0,0,0.7); background:rgba(0,0,0,0.5); padding:10px 20px; border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    #feedback {
+      font-size:1.3em;
+      color:#fff;
+      margin-bottom:20px;
+      min-height:1.4em;
+      text-shadow:1px 1px 2px rgba(0,0,0,0.7);
+      background:rgba(0,0,0,0.5);
+      padding:10px 20px;
+      border-radius:8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      visibility: hidden; /* oculto por defecto */
+    }
     #answers { display:grid; grid-template-columns:1fr 1fr; gap:20px; width:80%; }
     button.answer { width:100%; background-color:rgba(255,102,163,0.8); border:none; color:#fff; padding:14px; font-size:18px; border-radius:8px; cursor:pointer; text-align:left; text-shadow:1px 1px 2px rgba(0,0,0,0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
     button.answer:hover { background-color:rgba(204,64,120,0.8); }
@@ -81,14 +92,16 @@
         if(current<5){ if(!audio.src.includes('naruto.mp3')){ audio.src='naruto.mp3'; audio.play().catch(()=>{}); } }
         const q=questions[current]; document.getElementById('question').textContent=q.q;
         document.body.style.backgroundImage=`url('fondo${current+1}.png')`;
-        feedbackEl.textContent=''; const answersDiv=document.getElementById('answers'); answersDiv.innerHTML='';
+        feedbackEl.textContent='';
+        feedbackEl.style.visibility='hidden'; const answersDiv=document.getElementById('answers'); answersDiv.innerHTML='';
         q.options.forEach((opt,idx)=>{
           const btn=document.createElement('button'); btn.className='answer'; btn.textContent=`${letters[idx]} ${opt}`;
           btn.onclick=()=>{
-            if(idx===q.answer){ feedbackEl.textContent=messages[current%messages.length].replace('{name}',username);
+            if(idx===q.answer){ feedbackEl.textContent = messages[current%messages.length].replace('{name}',username);
+              feedbackEl.style.visibility = 'visible';
               if(current===5){ setTimeout(()=>{ audio.src='iwonder.mp3'; audio.play().catch(()=>{});
                 document.getElementById('pre-text').textContent=
-                  `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌, GANBATTE!!`;
+                  `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌!!`;
                 quizContainer.style.visibility='hidden'; preFinal.style.visibility='visible'; },1000);
               } else { current++; setTimeout(()=>{ current<questions.length? loadQuestion(): showFinal(); },1000); }
             } else alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
