@@ -17,17 +17,24 @@
       justify-content: center;
       align-items: center;
     }
-    /* Pantalla inicial */
+    /* Pantalla inicial con fondo */
     #start-screen {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(255,255,255,0.95);
+      background-image: url('inicio.png');
+      background-size: cover;
+      background-position: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 10;
+    }
+    #start-screen h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 2em;
     }
     #start-screen input {
       padding: 10px;
@@ -92,12 +99,12 @@
   </style>
 </head>
 <body>
-  <!-- Audio dinámica -->
-  <audio id="bg-music" src="naruto.mp3" autoplay loop></audio>
+  <!-- Audio dinámico sin autoplay -->
+  <audio id="bg-music" loop></audio>
 
   <!-- Pantalla inicial -->
   <div id="start-screen">
-    <h2>Bienvenido a la Anitrivia</h2>
+    <h2>Bienvenido a la ANITRIVIA</h2>
     <input type="text" id="username" placeholder="Ingresa tu nombre" />
     <button id="start-btn">Iniciar Trivia</button>
   </div>
@@ -115,10 +122,11 @@
       { q: "¿Quién es Haku en la película 'El viaje de Chihiro'?", options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"], answer: 0 },
       { q: "¿Quién es el amor verdadero de Uzumaki Naruto?", options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"], answer: 1 },
       { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
-      { q: "En 'Kimetsu No Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
+      { q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
       { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
       { q: "¿Quieres pololear conmigo?", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
     ];
+
     const audio = document.getElementById('bg-music');
     const startScreen = document.getElementById('start-screen');
     const startBtn = document.getElementById('start-btn');
@@ -129,7 +137,10 @@
     startBtn.onclick = () => {
       const name = usernameInput.value.trim();
       if (!name) return alert('Por favor ingresa tu nombre');
-      // Ocultar pantalla inicial y mostrar trivia
+      // Iniciar música de Naruto al click
+      audio.src = 'naruto.mp3';
+      audio.play().catch(() => console.log('Autoplay bloqueado.'));
+      // Mostrar trivia
       startScreen.style.display = 'none';
       quizContainer.style.visibility = 'visible';
       loadQuestion();
