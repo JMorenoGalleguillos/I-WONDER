@@ -167,7 +167,7 @@
         { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
         { q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
         { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
-        { q: "¿Quieres pololear conmigo?", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
+        { q: "¿Quieres pololear conmigo? 💙", options: ["Sí", "YES or Yes", "Obvio que si ctmmm", "Todas las anteriores"], answer: 3 }
       ];
       const audio = document.getElementById('bg-music');
       const startScreen = document.getElementById('start-screen');
@@ -199,12 +199,13 @@
         loadQuestion();
       });
 
-      function updateAudio() {
-        const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
-        if (!audio.src.includes(src)) {
-          audio.src = src;
+            function updateAudio() {
+        // Siempre reproducir Naruto hasta la respuesta correcta de la penúltima pregunta
+        if (!audio.src.includes('naruto.mp3')) {
+          audio.src = 'naruto.mp3';
           audio.play().catch(() => {});
         }
+      }
       }
 
       function loadQuestion() {
@@ -228,8 +229,8 @@
                   audio.src = 'iwonder.mp3';
                   audio.play().catch(() => {});
                   quizContainer.style.display = 'none';
-                  preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI, CHAKRA, NEN, HAKI, COSMO, MANA, STANDS, AURA del mundo 🙌!!`;
-                  preFinal.style.display = 'block';
+                  preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌!!`;
+                preFinal.style.display = 'block';
                 }, 1000);
               } else {
                 current++;
