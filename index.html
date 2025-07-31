@@ -133,26 +133,22 @@
 </head>
 <body>
   <audio id="bg-music" loop></audio>
-
   <div id="start-screen">
     <h2>Bienvenido a la ANITRIVIA</h2>
     <input type="text" id="username" placeholder="Ingresa tu nombre" />
     <button id="start-btn">Iniciar Trivia</button>
   </div>
-
   <div id="pre-final">
     <h2 id="pre-text"></h2>
     <button id="pre-btn">Continuar</button>
   </div>
-
   <div class="container" id="quiz-container">
     <h2 id="question"></h2>
     <div id="feedback"></div>
     <div id="answers"></div>
   </div>
-
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
       const letters = ['a)', 'b)', 'c)', 'd)'];
       const messages = [
         '¡Bien hecho, {name}! 🎉',
@@ -181,7 +177,7 @@
       let current = 0;
       let username = '';
 
-      startBtn.addEventListener('click', function() {
+      startBtn.addEventListener('click', () => {
         const name = usernameInput.value.trim();
         if (!name) { alert('Por favor ingresa tu nombre'); return; }
         username = name;
@@ -192,20 +188,19 @@
         loadQuestion();
       });
 
-      preBtn.addEventListener('click', function() {
+      preBtn.addEventListener('click', () => {
         preFinal.style.display = 'none';
         quizContainer.style.display = 'block';
         current++;
         loadQuestion();
       });
 
-            function updateAudio() {
-        // Siempre reproducir Naruto hasta la respuesta correcta de la penúltima pregunta
+      function updateAudio() {
+        // Nunca cambia aquí, sólo naruto hasta pre-final
         if (!audio.src.includes('naruto.mp3')) {
           audio.src = 'naruto.mp3';
           audio.play().catch(() => {});
         }
-      }
       }
 
       function loadQuestion() {
@@ -220,21 +215,21 @@
           const btn = document.createElement('button');
           btn.className = 'answer';
           btn.textContent = `${letters[idx]} ${opt}`;
-          btn.addEventListener('click', function() {
+          btn.addEventListener('click', () => {
             if (idx === q.answer) {
               const msg = messages[current % messages.length].replace('{name}', username);
               feedbackEl.textContent = msg;
               if (current === 5) {
-                setTimeout(function() {
+                setTimeout(() => {
                   audio.src = 'iwonder.mp3';
                   audio.play().catch(() => {});
                   quizContainer.style.display = 'none';
                   preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌!!`;
-                preFinal.style.display = 'block';
+                  preFinal.style.display = 'block';
                 }, 1000);
               } else {
                 current++;
-                setTimeout(function() {
+                setTimeout(() => {
                   if (current < questions.length) loadQuestion(); else showFinal();
                 }, 1000);
               }
@@ -247,7 +242,8 @@
       }
 
       function showFinal() {
-        updateAudio();
+        audio.src = 'iwonder.mp3';
+        audio.play().catch(() => {});
         quizContainer.innerHTML = `
           <h2>💖 ¡Siii! 💖</h2>
           <div class="hearts">💗💓💞💕💘💝💖</div>
