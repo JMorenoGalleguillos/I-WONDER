@@ -102,7 +102,7 @@
               if(current===5){ setTimeout(()=>{ audio.src='iwonder.mp3'; audio.play().catch(()=>{});
                 document.getElementById('pre-text').textContent=
                   `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌!!`;
-                quizContainer.style.visibility='hidden'; preFinal.style.visibility='visible'; },1000);
+                feedbackEl.style.visibility='hidden'; quizContainer.style.visibility='hidden'; preFinal.style.visibility='visible'; },1000);
               } else { current++; setTimeout(()=>{ current<questions.length? loadQuestion(): showFinal(); },1000); }
             } else alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
           };
