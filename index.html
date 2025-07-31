@@ -57,16 +57,16 @@
     #start-screen button:hover {
       background-color: #cc4078;
     }
-    /* Trivia container */
+    /* Trivia container hidden inicialmente */
     .container {
+      display: none;
       background: white;
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       max-width: 600px;
-      transform: translateY(-70%);
+      transform: translateY(-20%);
       z-index: 1;
-      visibility: hidden;
     }
     h2 { color: #d0005f; margin-bottom: 10px; }
     #feedback {
@@ -157,7 +157,7 @@
       audio.src = 'naruto.mp3';
       audio.play().catch(() => {});
       startScreen.style.display = 'none';
-      quizContainer.style.visibility = 'visible';
+      quizContainer.style.display = 'block';
       loadQuestion();
     };
 
@@ -176,23 +176,34 @@
       const answersDiv = document.getElementById('answers');
       answersDiv.innerHTML = '';
       document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
-      feedbackEl.textContent = ''; // limpiar feedback antes de mostrar opciones
+      feedbackEl.textContent = '';
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = 'answer';
         btn.textContent = `${letters[idx]} ${opt}`;
         btn.onclick = () => {
           if (idx === q.answer) {
-            // Mostrar feedback tras respuesta correcta
             const msg = messages[current % messages.length].replace('{name}', username);
             feedbackEl.textContent = msg;
             current++;
-            if (current < questions.length) {
-              setTimeout(loadQuestion, 1000);
-            } else {
-              setTimeout(showFinal, 1000);
-            }
+            setTimeout(() => {
+              if (current < questions.length) loadQuestion(); else showFinal();
+            }, 1000);
           } else {
             alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
           }
         };
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function showFinal() {
+      updateAudio();
+      quizContainer.innerHTML = `
+        <h2>💖 ¡Siii! 💖</h2>
+        <div class="hearts">💗💓💞💕💘💝💖</div>
+      `;
+    }
+  </script>
+</body>
+</html>
