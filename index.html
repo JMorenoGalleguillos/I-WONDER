@@ -169,7 +169,7 @@
       { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
       { q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
       { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
-      { q: "¿Quieres pololear conmigo?", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
+      { q: "¿Quieres pololear conmigo? 💙", options: ["Sí", "Muy Sí", "YES or YES", "Todas las anteriores"], answer: 3 }
     ];
 
     const audio = document.getElementById('bg-music');
@@ -220,12 +220,15 @@
             const msg = messages[current % messages.length].replace('{name}', username);
             feedbackEl.textContent = msg;
             if (current === 5) {
-              // Antes de la última pregunta
-              setTimeout(() => {
-                quizContainer.style.display = 'none';
-                preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI, CHAKRA, NEN, HAKI, COSMO, MANA, STANDS, AURA del mundo 🙌!!`;
-                preFinal.style.display = 'block';
-              }, 1000);
+            // Cambiar a canción "i wonder" tras penúltima respuesta correcta
+            setTimeout(() => {
+              audio.src = 'iwonder.mp3';
+              audio.play().catch(() => {});
+              quizContainer.style.display = 'none';
+              preText.textContent = `Ahora viene la última y más importante pregunta, ${username}-CHAN. ¡Te enviamos todo el KI, CHAKRA, NEN, HAKI, COSMO, MANA, STANDS, AURA y sobretodo AMOR del mundo 🙌, GANBATTE!! !!`;
+              preFinal.style.display = 'block';
+            }, 1000);
+          }
             } else {
               current++;
               setTimeout(() => {
