@@ -17,6 +17,39 @@
       justify-content: center;
       align-items: center;
     }
+    /* Pantalla inicial */
+    #start-screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    #start-screen input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #start-screen button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #ff66a3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #start-screen button:hover {
+      background-color: #cc4078;
+    }
+    /* Trivia container */
     .container {
       background: white;
       padding: 30px;
@@ -25,6 +58,7 @@
       max-width: 600px;
       transform: translateY(-70%);
       z-index: 1;
+      visibility: hidden;
     }
     h2 { color: #d0005f; margin-bottom: 20px; }
     #answers {
@@ -58,8 +92,17 @@
   </style>
 </head>
 <body>
-  <!-- Autoplay de naruto.mp3 inicialmente, loop -->
+  <!-- Audio dinámica -->
   <audio id="bg-music" src="naruto.mp3" autoplay loop></audio>
+
+  <!-- Pantalla inicial -->
+  <div id="start-screen">
+    <h2>Bienvenido a la Anitrivia</h2>
+    <input type="text" id="username" placeholder="Ingresa tu nombre" />
+    <button id="start-btn">Iniciar Trivia</button>
+  </div>
+
+  <!-- Contenedor de la trivia -->
   <div class="container" id="quiz-container">
     <h2 id="question"></h2>
     <div id="answers"></div>
@@ -74,18 +117,29 @@
       { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
       { q: "En 'Kimetsu No Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
       { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
-      { q: "¿Quieres pololear conmigo? 💖", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
+      { q: "¿Quieres pololear conmigo?", options: ["Sí", "Muy Sí", "Claro que YES", "Todas las anteriores"], answer: 3 }
     ];
     const audio = document.getElementById('bg-music');
+    const startScreen = document.getElementById('start-screen');
+    const startBtn = document.getElementById('start-btn');
+    const usernameInput = document.getElementById('username');
+    const quizContainer = document.getElementById('quiz-container');
     let current = 0;
+
+    startBtn.onclick = () => {
+      const name = usernameInput.value.trim();
+      if (!name) return alert('Por favor ingresa tu nombre');
+      // Ocultar pantalla inicial y mostrar trivia
+      startScreen.style.display = 'none';
+      quizContainer.style.visibility = 'visible';
+      loadQuestion();
+    };
 
     function updateAudio() {
       const src = current < 5 ? 'naruto.mp3' : 'iwonder.mp3';
       if (!audio.src.includes(src)) {
         audio.src = src;
-        audio.play().catch(() => {
-          console.log('Autoplay bloqueado.');
-        });
+        audio.play().catch(() => console.log('Autoplay bloqueado.'));
       }
     }
 
@@ -104,9 +158,7 @@
           if (idx === q.answer) {
             current++;
             if (current < questions.length) loadQuestion(); else showFinal();
-          } else {
-            alert('¡Oops! Esa no es la respuesta correcta 💔');
-          }
+          } else alert('¡Oops! Esa no es la respuesta correcta 💔');
         };
         answersDiv.appendChild(btn);
       });
@@ -114,14 +166,11 @@
 
     function showFinal() {
       updateAudio();
-      const container = document.getElementById('quiz-container');
-      container.innerHTML = `
+      quizContainer.innerHTML = `
         <h2>💖 ¡Siii! 💖</h2>
-        <div class="hearts">💗💓💞💕💘💝💖💗💓💞💕💘💝💖</div>
+        <div class="hearts">💗💓💞💕💘💝💖</div>
       `;
     }
-
-    document.addEventListener('DOMContentLoaded', loadQuestion);
   </script>
 </body>
 </html>
