@@ -57,7 +57,32 @@
     #start-screen button:hover {
       background-color: #cc4078;
     }
-    /* Trivia container hidden inicialmente */
+    /* Pantalla pre-final */
+    #pre-final {
+      display: none;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      max-width: 600px;
+      transform: translateY(-20%);
+      z-index: 1;
+      text-align: center;
+    }
+    #pre-final button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #ff66a3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #pre-final button:hover {
+      background-color: #cc4078;
+    }
+    /* Trivia container */
     .container {
       display: none;
       background: white;
@@ -67,6 +92,7 @@
       max-width: 600px;
       transform: translateY(-20%);
       z-index: 1;
+      text-align: center;
     }
     h2 { color: #d0005f; margin-bottom: 10px; }
     #feedback {
@@ -106,14 +132,19 @@
   </style>
 </head>
 <body>
-  <!-- Audio dinámica -->
-  <audio id="bg-music" src="naruto.mp3" loop></audio>
+  <audio id="bg-music" loop></audio>
 
   <!-- Pantalla inicial -->
   <div id="start-screen">
     <h2>Bienvenido a la ANITRIVIA</h2>
     <input type="text" id="username" placeholder="Ingresa tu nombre" />
     <button id="start-btn">Iniciar Trivia</button>
+  </div>
+
+  <!-- Pantalla previa a la última pregunta -->
+  <div id="pre-final">
+    <h2 id="pre-text"></h2>
+    <button id="pre-btn">Continuar</button>
   </div>
 
   <!-- Contenedor de la trivia -->
@@ -145,6 +176,9 @@
     const startScreen = document.getElementById('start-screen');
     const startBtn = document.getElementById('start-btn');
     const usernameInput = document.getElementById('username');
+    const preFinal = document.getElementById('pre-final');
+    const preText = document.getElementById('pre-text');
+    const preBtn = document.getElementById('pre-btn');
     const quizContainer = document.getElementById('quiz-container');
     const feedbackEl = document.getElementById('feedback');
     let current = 0;
@@ -185,10 +219,19 @@
           if (idx === q.answer) {
             const msg = messages[current % messages.length].replace('{name}', username);
             feedbackEl.textContent = msg;
-            current++;
-            setTimeout(() => {
-              if (current < questions.length) loadQuestion(); else showFinal();
-            }, 1000);
+            if (current === 5) {
+              // Antes de la última pregunta
+              setTimeout(() => {
+                quizContainer.style.display = 'none';
+                preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI, CHAKRA, NEN, HAKI, COSMO, MANA, STANDS, AURA del mundo 🙌!!`;
+                preFinal.style.display = 'block';
+              }, 1000);
+            } else {
+              current++;
+              setTimeout(() => {
+                if (current < questions.length) loadQuestion(); else showFinal();
+              }, 1000);
+            }
           } else {
             alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
           }
@@ -196,6 +239,13 @@
         answersDiv.appendChild(btn);
       });
     }
+
+    preBtn.onclick = () => {
+      preFinal.style.display = 'none';
+      current++;
+      quizContainer.style.display = 'block';
+      loadQuestion();
+    };
 
     function showFinal() {
       updateAudio();
