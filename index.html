@@ -83,7 +83,7 @@
       background-color: #cc4078;
     }
     /* Trivia container */
-    .container {
+    #quiz-container {
       display: none;
       background: white;
       padding: 30px;
@@ -142,114 +142,113 @@
     <h2 id="pre-text"></h2>
     <button id="pre-btn">Continuar</button>
   </div>
-  <div class="container" id="quiz-container">
+  <div id="quiz-container">
     <h2 id="question"></h2>
     <div id="feedback"></div>
     <div id="answers"></div>
   </div>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const letters = ['a)', 'b)', 'c)', 'd)'];
-      const messages = [
-        '¡Bien hecho, {name}! 🎉',
-        '¡Excelente, {name}! ✨',
-        '¡Sigue así, {name}! 👍',
-        '¡Muy bien, {name}! 😊'
-      ];
-      const questions = [
-        { q: "¿Cuántos pokémons son de la primera generación?", options: ["101", "152", "151", "11"], answer: 2 },
-        { q: "¿Quién es Haku en la película 'El viaje de Chihiro'?", options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"], answer: 0 },
-        { q: "¿Quién es el amor verdadero de Uzumaki Naruto?", options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"], answer: 1 },
-        { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
-        { q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
-        { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
-        { q: "¿Quieres pololear conmigo? 💙", options: ["Sí", "YES or Yes", "Obvio que si ctmmm", "Todas las anteriores"], answer: 3 }
-      ];
-      const audio = document.getElementById('bg-music');
-      const startScreen = document.getElementById('start-screen');
-      const startBtn = document.getElementById('start-btn');
-      const usernameInput = document.getElementById('username');
-      const quizContainer = document.getElementById('quiz-container');
-      const preFinal = document.getElementById('pre-final');
-      const preText = document.getElementById('pre-text');
-      const preBtn = document.getElementById('pre-btn');
-      const feedbackEl = document.getElementById('feedback');
-      let current = 0;
-      let username = '';
+    const letters = ['a)', 'b)', 'c)', 'd)'];
+    const messages = [
+      '¡Bien hecho, {name}! 🎉',
+      '¡Excelente, {name}! ✨',
+      '¡Sigue así, {name}! 👍',
+      '¡Muy bien, {name}! 😊'
+    ];
+    const questions = [
+      { q: "¿Cuántos pokémons son de la primera generación?", options: ["101", "152", "151", "11"], answer: 2 },
+      { q: "¿Quién es Haku en la película 'El viaje de Chihiro'?", options: ["El espíritu que salvó a Chihiro", "El padre de Chihiro", "La mascota de Chihiro", "Ninguna de las anteriores"], answer: 0 },
+      { q: "¿Quién es el amor verdadero de Uzumaki Naruto?", options: ["Haruno Sakura", "Hyuga Hinata", "Nara Temari", "Uchiha Sasuke"], answer: 1 },
+      { q: "En 'Los diarios de la boticaria', ¿de qué color son los ojos de Maomao?", options: ["Negros", "Azules", "Verdes", "Violetas"], answer: 1 },
+      { q: "En 'Kimetsu no Yaiba', ¿cuántos pilares existen?", options: ["5", "7", "8", "9"], answer: 3 },
+      { q: "¿Cuál es el apellido de Sakura Cardcaptor?", options: ["Ackerman", "Haruno", "Saotome", "Kinomoto"], answer: 3 },
+      { q: "¿Quieres pololear conmigo? 💙", options: ["Sí", "YES or Yes", "Obvio que si ctmmm", "Todas las anteriores"], answer: 3 }
+    ];
+    const audio = document.getElementById('bg-music');
+    const startScreen = document.getElementById('start-screen');
+    const startBtn = document.getElementById('start-btn');
+    const usernameInput = document.getElementById('username');
+    const quizContainer = document.getElementById('quiz-container');
+    const preFinal = document.getElementById('pre-final');
+    const preText = document.getElementById('pre-text');
+    const preBtn = document.getElementById('pre-btn');
+    const feedbackEl = document.getElementById('feedback');
+    let current = 0;
+    let username = '';
 
-      startBtn.addEventListener('click', () => {
-        const name = usernameInput.value.trim();
-        if (!name) { alert('Por favor ingresa tu nombre'); return; }
-        username = name;
+    function showScreen(element) {
+      startScreen.style.display = 'none';
+      preFinal.style.display = 'none';
+      quizContainer.style.display = 'none';
+      element.style.display = 'block';
+    }
+
+    startBtn.onclick = function() {
+      const name = usernameInput.value.trim();
+      if (!name) { alert('Por favor ingresa tu nombre'); return; }
+      username = name;
+      audio.src = 'naruto.mp3';
+      audio.play().catch(() => {});
+      showScreen(quizContainer);
+      loadQuestion();
+    };
+
+    preBtn.onclick = function() {
+      showScreen(quizContainer);
+      current++;
+      loadQuestion();
+    };
+
+    function updateAudio() {
+      // Narutomp3 until pre-final
+      if (!audio.src.includes('naruto.mp3')) {
         audio.src = 'naruto.mp3';
         audio.play().catch(() => {});
-        startScreen.style.display = 'none';
-        quizContainer.style.display = 'block';
-        loadQuestion();
-      });
-
-      preBtn.addEventListener('click', () => {
-        preFinal.style.display = 'none';
-        quizContainer.style.display = 'block';
-        current++;
-        loadQuestion();
-      });
-
-      function updateAudio() {
-        // Nunca cambia aquí, sólo naruto hasta pre-final
-        if (!audio.src.includes('naruto.mp3')) {
-          audio.src = 'naruto.mp3';
-          audio.play().catch(() => {});
-        }
       }
+    }
 
-      function loadQuestion() {
-        updateAudio();
-        const q = questions[current];
-        document.getElementById('question').textContent = q.q;
-        const answersDiv = document.getElementById('answers');
-        answersDiv.innerHTML = '';
-        document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
-        feedbackEl.textContent = '';
-        q.options.forEach((opt, idx) => {
-          const btn = document.createElement('button');
-          btn.className = 'answer';
-          btn.textContent = `${letters[idx]} ${opt}`;
-          btn.addEventListener('click', () => {
-            if (idx === q.answer) {
-              const msg = messages[current % messages.length].replace('{name}', username);
-              feedbackEl.textContent = msg;
-              if (current === 5) {
-                setTimeout(() => {
-                  audio.src = 'iwonder.mp3';
-                  audio.play().catch(() => {});
-                  quizContainer.style.display = 'none';
-                  preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌!!`;
-                  preFinal.style.display = 'block';
-                }, 1000);
-              } else {
-                current++;
-                setTimeout(() => {
-                  if (current < questions.length) loadQuestion(); else showFinal();
-                }, 1000);
-              }
+    function loadQuestion() {
+      updateAudio();
+      const q = questions[current];
+      document.getElementById('question').textContent = q.q;
+      document.body.style.backgroundImage = `url('fondo${current + 1}.png')`;
+      feedbackEl.textContent = '';
+      const answersDiv = document.getElementById('answers');
+      answersDiv.innerHTML = '';
+      q.options.forEach(function(opt, idx) {
+        const btn = document.createElement('button');
+        btn.className = 'answer';
+        btn.textContent = letters[idx] + ' ' + opt;
+        btn.onclick = function() {
+          if (idx === q.answer) {
+            feedbackEl.textContent = messages[current % messages.length].replace('{name}', username);
+            if (current === 5) {
+              setTimeout(function() {
+                audio.src = 'iwonder.mp3';
+                audio.play().catch(() => {});
+                preText.textContent = `Ahora viene la última y más importante pregunta, ${username}. ¡Te enviamos todo el KI 🐉, CHAKRA 🌀, NEN 🌱, HAKI 💥, COSMO 🌟, MANA 🔮, STANDS 👊, AURA 🌈 y sobre todo AMOR 💙 del mundo 🙌!!`;
+                showScreen(preFinal);
+              }, 1000);
             } else {
-              alert(`¡Oops, ${username}! Esa no es la respuesta correcta 💔`);
+              current++;
+              setTimeout(function() {
+                if (current < questions.length) loadQuestion(); else showFinal();
+              }, 1000);
             }
-          });
-          answersDiv.appendChild(btn);
-        });
-      }
+          } else {
+            alert('¡Oops, ' + username + '! Esa no es la respuesta correcta 💔');
+          }
+        };
+        answersDiv.appendChild(btn);
+      });
+    }
 
-      function showFinal() {
-        audio.src = 'iwonder.mp3';
-        audio.play().catch(() => {});
-        quizContainer.innerHTML = `
-          <h2>💖 ¡Siii! 💖</h2>
-          <div class="hearts">💗💓💞💕💘💝💖</div>
-        `;
-      }
-    });
+    function showFinal() {
+      audio.src = 'iwonder.mp3';
+      audio.play().catch(() => {});
+      quizContainer.innerHTML = '<h2>💖 ¡Siii! 💖</h2><div class="hearts">💗💓💞💕💘💝💖</div>';
+      showScreen(quizContainer);
+    }
   </script>
 </body>
 </html>
